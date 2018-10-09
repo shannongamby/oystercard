@@ -21,12 +21,6 @@ describe Oystercard do
     expect { card.top_up(100) }.to raise_error "Unable to top up, maximum #{Oystercard::LIMIT}"
   end
 
-  it 'deducts an amount from balance' do
-    card = Oystercard.new(10)
-    card.deduct(5)
-    expect(card.balance).to eq 5
-  end
-
   it 'should not be in_journey before touching in' do
     card = Oystercard.new
     expect(card.in_journey?).to eq false
@@ -41,7 +35,7 @@ describe Oystercard do
   it 'should be in_jouney when touching in' do
     card = Oystercard.new(2)
     card.touch_in
-    card.touch_out
+    card.touch_out(1)
     expect(card.in_journey?).to eq false
   end
 
@@ -50,10 +44,10 @@ describe Oystercard do
     expect { card.touch_in }.to raise_error "Insufficient funds - less then #{Oystercard::MINIMUM}"
   end
 
-  it "should reduce the balance by minimum fare when touching out" do
-    card = Oystercard.new(2)
+  it "should reduce the balance by fare when touching out" do
+    card = Oystercard.new(10)
     card.touch_in
-    expect { card.touch_out }.to change { card.balance }.by(-Oystercard::MINIMUM)
+    expect { card.touch_out(5) }.to change { card.balance }.by(-5)
   end
 
 end
