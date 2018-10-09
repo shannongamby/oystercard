@@ -5,6 +5,7 @@ class Oystercard
 
   LIMIT = 90
   MINIMUM = 1
+  PENALTY_FARE = 6
 
   def initialize(balance = 0)
     @balance = balance
@@ -25,8 +26,8 @@ class Oystercard
     @journey.touch_in(station)
   end
 
-  def touch_out(station, amount)
-    deduct(amount)
+  def touch_out(station)
+    deduct
     @journey.touch_out(station)
   end
 
@@ -35,8 +36,8 @@ class Oystercard
   end
 
   private
-  def deduct(amount)
-    @balance -= amount
+  def deduct
+    @balance -= MINIMUM
   end
 
 end
