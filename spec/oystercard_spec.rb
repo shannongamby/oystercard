@@ -21,11 +21,6 @@ describe Oystercard do
     expect { card.top_up(100) }.to raise_error "Unable to top up, maximum #{Oystercard::LIMIT}"
   end
 
-  it 'should not be in_journey before touching in' do
-    card = Oystercard.new
-    expect(card.in_journey?).to eq false
-  end
-
   it 'should be in_jouney when touching in' do
     card = Oystercard.new(5)
     card.touch_in("station")
@@ -48,19 +43,6 @@ describe Oystercard do
     card = Oystercard.new(10)
     card.touch_in("station")
     expect { card.touch_out("station_2", 5) }.to change { card.balance }.by(-5)
-  end
-
-  it 'stores the entry station after touch in' do
-    card = Oystercard.new(10)
-    card.touch_in("station")
-    expect(card.location).to eq "station"
-  end
-
-  it 'forgets the entry station on touch out' do
-    card = Oystercard.new(10)
-    card.touch_in("station")
-    card.touch_out("station_2", 2)
-    expect(card.location).to eq nil
   end
 
   it 'remembers my journey' do
