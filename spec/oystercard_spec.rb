@@ -35,7 +35,7 @@ describe Oystercard do
   it 'should be in_jouney when touching in' do
     card = Oystercard.new(2)
     card.touch_in("station")
-    card.touch_out(1)
+    card.touch_out("station_2", 1)
     expect(card.in_journey?).to eq false
   end
 
@@ -47,7 +47,7 @@ describe Oystercard do
   it "should reduce the balance by fare when touching out" do
     card = Oystercard.new(10)
     card.touch_in("station")
-    expect { card.touch_out(5) }.to change { card.balance }.by(-5)
+    expect { card.touch_out("station_2", 5) }.to change { card.balance }.by(-5)
   end
 
   it 'stores the entry station after touch in' do
@@ -56,11 +56,22 @@ describe Oystercard do
     expect(card.location).to eq "station"
   end
 
-  it 'forgets the entry station on touch out' do 
+  it 'forgets the entry station on touch out' do
     card = Oystercard.new(10)
     card.touch_in("station")
-    card.touch_out(2)
+    card.touch_out("station_2", 2)
     expect(card.location).to eq nil
   end
 
+  it 'remembers my journey' do
+    card = Oystercard.new(10)
+    card.touch_in("station")
+    card.touch_out("station_2", 2)
+    expect(card.journey_history).to eq "entry: station, exit: station_2"
+  end
+
+  it 'a new card has no journey_history' do
+    card = Oystercard.new
+    expect(card.journey_history).to eq "No journeys yet"
+  end
 end
